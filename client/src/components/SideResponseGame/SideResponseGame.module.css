@@ -1,0 +1,4 @@
+.gameWrapper {
+    display: flex;
+    flex-direction: column;
+}
