@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import SideResponseGame from '../../components/SideResponseGame/SideResponseGame';
+import styles from './GamePlayer.module.css';
 
 // GameContainer Component
 const GamePlayer = () => {
@@ -19,11 +20,11 @@ const GamePlayer = () => {
     };
 
     return (
-        <div>
+        <div className={styles.playerWrapper}>
             <button onClick={toggleGameStatus}>
                 {isGameOn ? 'Stop Game' : 'Start Game'}
             </button>
-            {isGameOn && <SideResponseGame round={round} onGameEnd={handleGameEnd} />}
+            <div className={styles.gameArea}>  {isGameOn && <SideResponseGame round={round} onGameEnd={handleGameEnd} />}</div>
         </div>
     );
 };
