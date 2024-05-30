@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import styles from './SideResponseGame.module.css';
 import { GrCube } from "react-icons/gr";
 
-
 interface ISideResponseGameProps {
   round: number;
   onGameEnd: () => void;
@@ -17,7 +16,9 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
   const [position, setPosition] = useState<'right' | 'left'>(getRandomPosition());
   const [feedback, setFeedback] = useState<{ type: 'success' | 'mistake', message: string }>({ type: 'success', message: '' });
   const gameWrapperRef = useRef<HTMLDivElement>(null);
-
+  const timeoutIds = useRef<number[]>([]);
+  
+  /*************** useEffects ***************/
   useEffect(() => {
     const divElement = gameWrapperRef.current;
 
@@ -26,70 +27,85 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
         divElement.focus();
       }
     };
-
     handleFocus();
-
-    // Add event listeners to refocus when the div loses focus
     divElement?.addEventListener('focusout', handleFocus);
-
-    // Cleanup event listeners
     return () => {
       divElement?.removeEventListener('focusout', handleFocus);
     };
   }, []);
 
   useEffect(() => {
-    let gameTimeout: number | undefined;
-
-    if (round >= 0) {
-      const waitTime = getRandomWaitTime(2,5); // 2-5 seconds wait time
-
-      const startGameCycle = () => {
-        setFeedback({type: 'success', message: ''});
-        console.log(`Round ${round}: Waiting for ${waitTime / 1000} seconds`);
-        gameTimeout = setTimeout(() => {
-          setPosition(getRandomPosition());
-          setShowElement(true);
-          console.log(`Round ${round}: Displaying element for ${responseTime / 1000} seconds`);
-
-          // Simulate 1 second response time
-          gameTimeout = setTimeout(async () => {
-            setShowElement(false);
-            if (!feedback.message) {
-              setFeedback({ type: 'mistake', message: 'Too Late' });
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              setFeedback({type: 'success', message: ''});
-            }
-            onGameEnd();
-          }, responseTime);
-        }, waitTime);
-      };
-
+    if (round >= 1) {
       startGameCycle();
     }
-
-    // Cleanup function
     return () => {
-      if (gameTimeout) clearTimeout(gameTimeout);
+      clearTimeouts();
     };
   }, [round, onGameEnd]);
 
-  // functions
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+/*************** functions ***************/  
+const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    endGameCycle(e.key);
+  }
+
+  const endGameCycle = async (key: string) => {
+    clearTimeouts();
+    setGameFeedback(key);
+    setShowElement(false);
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    onGameEnd();
+    startGameCycle();
+  };
+
+  const startGameCycle = () => {
+    const waitTime = getRandomWaitTime(2, 5);
+
+    setFeedback({ type: 'success', message: '' });
+    console.log(`Round ${round}: Waiting for ${waitTime / 1000} seconds`);
+
+    const waitTimeout = setTimeout(() => {
+      setPosition(getRandomPosition());
+      setShowElement(true);
+      console.log(`Round ${round}: Displaying element for ${responseTime / 1000} seconds`);
+
+      const responseTimeout = setTimeout(() => {
+        setShowElement(false);
+        endGameCycle('late');
+      }, responseTime);
+
+      timeoutIds.current.push(responseTimeout);
+    }, waitTime);
+
+    timeoutIds.current.push(waitTimeout);
+  };
+
+  const setGameFeedback = (key: string) => {
+    if (key === 'late') {
+      setFeedback({ type: 'mistake', message: 'Too Late' });
+      return;
+    }
     if (!showElement) {
       setFeedback({ type: 'mistake', message: 'Too Soon' });
-    } else if (e.key === 'a' && position === 'left' || e.key === 'l' && position === 'right') {
-      setFeedback({ type: 'success', message: 'Success' });
-    } else {
-      setFeedback({ type: 'mistake', message: 'Wrong Key' });
+      return;
     }
+    if (key === 'a' && position === 'left' || key === 'l' && position === 'right') {
+      setFeedback({ type: 'success', message: 'Success' });
+      return;
+    } 
+    setFeedback({ type: 'mistake', message: 'Wrong Key' });
+  }
+
+  const clearTimeouts = () => {
+    timeoutIds.current.forEach(clearTimeout);
+    timeoutIds.current = [];
   }
 
   return <div className={styles.gameWrapper}
     onKeyDown={handleKeyDown}
     tabIndex={0}
     ref={gameWrapperRef}>
-    {!showElement && <div>Waiting zone...</div>}
+    <div>Round {round}</div>
+    {!showElement && !feedback.message && <div>Waiting zone...</div>}
     {showElement && <div className={styles.element}
       style={{ justifyContent: position === 'left' ? 'flex-start' : 'flex-end' }}
     >
@@ -101,4 +117,4 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
   </div>;
 };
 
-export default SideResponseGame
+export default SideResponseGame;
