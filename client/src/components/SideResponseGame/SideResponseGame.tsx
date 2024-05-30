@@ -57,7 +57,8 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
             setShowElement(false);
             if (!feedback.message) {
               setFeedback({ type: 'mistake', message: 'Too Late' });
-              await new Promise(resolve => setTimeout(resolve, 500));
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              setFeedback({type: 'success', message: ''});
             }
             onGameEnd();
           }, responseTime);
