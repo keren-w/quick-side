@@ -17,13 +17,13 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
   const [feedback, setFeedback] = useState<{ type: 'success' | 'mistake', message: string }>({ type: 'success', message: '' });
   const gameWrapperRef = useRef<HTMLDivElement>(null);
   const timeoutIds = useRef<number[]>([]);
-  
+
   /*************** useEffects ***************/
   useEffect(() => {
     const divElement = gameWrapperRef.current;
 
     const handleFocus = () => {
-      if (divElement) {
+      if (divElement && document.activeElement !== divElement) {
         divElement.focus();
       }
     };
@@ -43,8 +43,8 @@ const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
     };
   }, [round, onGameEnd]);
 
-/*************** functions ***************/  
-const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  /*************** functions ***************/
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     endGameCycle(e.key);
   }
 
@@ -91,7 +91,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (key === 'a' && position === 'left' || key === 'l' && position === 'right') {
       setFeedback({ type: 'success', message: 'Success' });
       return;
-    } 
+    }
     setFeedback({ type: 'mistake', message: 'Wrong Key' });
   }
 
