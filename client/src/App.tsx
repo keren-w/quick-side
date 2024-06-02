@@ -1,31 +1,46 @@
-// import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import GamePlayer from './views/GamePlayer'
+import './App.css';
+import { useState, useEffect } from 'react';
+import { UserContext } from './context';
+import GamePlayer from './pages/GamePlayer/GamePlayer';
+import Login from './pages/Login/Login';
+import NotFound from './pages/NotFound/NotFound';
+import { Routes, Route, Link, useNavigate} from 'react-router-dom';
 
-function App() {
-  // const [count, setCount] = useState(0)
+const App = () => {
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (username === '') {
+      navigate('/login');
+    } else {
+      navigate('/game');
+    }
+  }, [username, navigate])
 
   return (
-    <div id="app-layout">
-      <div className="games-bar">
-        <h3>Play games</h3>
-        <nav>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </nav>
-      </div>
+    <UserContext.Provider value={{ username, setUsername }}>
+      <div id="app-layout">
+        <div className="games-bar">
+          {username && <h3>Hello {username}</h3>}
+          <h3>Play games</h3>
+          <nav>
+            <ul>
+              <li><Link to="/game">Side Response</Link></li>
+            </ul>
+          </nav>
+        </div>
 
-      <div className="router-view">
-        <GamePlayer />
+        <div className="page-view">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/game" element={<GamePlayer />} />
+            <Route path="/404" element={<NotFound />} />
+          </Routes>
+        </div>
       </div>
-    </div>
-  )
-}
+    </UserContext.Provider>
+  );
+};
 
-export default App
+export default App;
