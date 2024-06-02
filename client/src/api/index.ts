@@ -1,0 +1,1 @@
+const urlWithProxy = '/api/v1';

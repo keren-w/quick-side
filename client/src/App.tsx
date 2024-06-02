@@ -11,7 +11,7 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (username === '') {
+    if (!username) {
       navigate('/login');
     } else {
       navigate('/game');

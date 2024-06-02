@@ -1,0 +1,20 @@
+{
+  "name": "quick-side",
+  "version": "1.0.0",
+  "description": "A web app game that tests and provides feedback to the user on his reaction time and quick decision making.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd ./server && npm start\" \"cd ./client && npm run dev\"",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keren-w/quick-side.git"
+  },
+  "author": "Keren Wigelman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/keren-w/quick-side/issues"
+  },
+  "homepage": "https://github.com/keren-w/quick-side#readme"
+}
