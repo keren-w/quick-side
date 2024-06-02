@@ -4,8 +4,8 @@ import { useNavigate} from 'react-router-dom';
 import {login} from "../../api";
 
 const Login = () => {
-    const { username: usernameContext, setUsername: setUsernameContext } = useContext(UserContext);
-    const [username, setUsername] = useState(usernameContext);
+    const {setUserData } = useContext(UserContext);
+    const [username, setUsername] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,7 +14,7 @@ const Login = () => {
 
     const handleSubmit = async () => {
         const response = await login(username);
-        setUsernameContext(response?.name?.first);
+        setUserData(response);
         navigate('/game');
       };
       

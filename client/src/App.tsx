@@ -1,45 +1,42 @@
 import './App.css';
-import { useState, useEffect } from 'react';
-import { UserContext } from './context';
-import GamePlayer from './pages/GamePlayer/GamePlayer';
-import Login from './pages/Login/Login';
-import NotFound from './pages/NotFound/NotFound';
-import { Routes, Route, Link, useNavigate} from 'react-router-dom';
+import { useEffect, useContext } from 'react';
+import { UserContext, UserContextProvider } from './context';
+import GamePlayer from './pages/GamePlayer';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
+import NavBar from './components/NavBar';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-const App = () => {
-  const [username, setUsername] = useState('');
+const AppContent = () => {
+  const { userData } = useContext(UserContext);
   const navigate = useNavigate();
+  const { name } = userData;
 
   useEffect(() => {
-    if (!username) {
+    if (!name?.first) {
       navigate('/login');
-    } else {
-      navigate('/game');
     }
-  }, [username, navigate])
+  }, [name, navigate])
 
   return (
-    <UserContext.Provider value={{ username, setUsername }}>
-      <div id="app-layout">
-        <div className="games-bar">
-          {username && <h3>Hello {username}</h3>}
-          <h3>Play games</h3>
-          <nav>
-            <ul>
-              <li><Link to="/game">Side Response</Link></li>
-            </ul>
-          </nav>
-        </div>
-
-        <div className="page-view">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/game" element={<GamePlayer />} />
-            <Route path="/404" element={<NotFound />} />
-          </Routes>
-        </div>
+    <div id="app-layout">
+     <NavBar />
+      <div className="page-view">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/game" element={<GamePlayer />} />
+          <Route path="/404" element={<NotFound />} />
+        </Routes>
       </div>
-    </UserContext.Provider>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <UserContextProvider>
+      <AppContent />
+    </UserContextProvider>
   );
 };
 

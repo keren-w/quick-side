@@ -8,12 +8,10 @@ router.get('/', (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username } = req.body;
-    console.log("USERNAME", username)
     const user = User.findByName(username);
     if (!user) {
         try {
             const newUser = await User.create({ username });
-           console.log('newUser:', newUser);
             res.status(201).json(newUser);
         } catch (err) {
             res.status(400).json({ message: err.message });

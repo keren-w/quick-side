@@ -4,8 +4,9 @@ const genderizeApi = 'https://api.genderize.io/';
 const randomuserApi = 'https://randomuser.me/api/';
 
 class User {
-    constructor(id, name, email,  picture, gender, score = 0) {
+    constructor(id, username, name, email,  picture, gender, score = 0) {
         this.id = id;
+        this.username = username;
         this.name = name;
         this.email = email;
         this.picture = picture?.large;
@@ -35,7 +36,7 @@ class User {
 
             const randomUserResponse = await axios.get(`${randomuserApi}?gender=${gender}`);
             const { name, email, picture } = randomUserResponse.data.results[0];
-            const newUser = new User(id, name, email, picture, gender);
+            const newUser = new User(id, username, name, email, picture, gender);
             this.users.push(newUser);
         return newUser;
         } catch (err) {
