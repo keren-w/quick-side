@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../context";
 import { useNavigate} from 'react-router-dom';
+import {login} from "../../api";
 
 const Login = () => {
     const { username: usernameContext, setUsername: setUsernameContext } = useContext(UserContext);
@@ -11,8 +12,9 @@ const Login = () => {
       setUsername(e.target.value);
     };
 
-    const handleSubmit = () => {
-        setUsernameContext(username);
+    const handleSubmit = async () => {
+        const response = await login(username);
+        setUsernameContext(response?.name?.first);
         navigate('/game');
       };
       
