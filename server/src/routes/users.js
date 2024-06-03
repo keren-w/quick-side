@@ -24,10 +24,8 @@ router.post('/login', async (req, res) => {
 
 router.patch('/:id/score', async (req, res) => {
     const { score } = req.body;
-    // console.log('updateScore:', hits);
     try {
         const updatedUser = await User.updateScore(req.params.id, score);
-        console.log('updatedUser:', updatedUser);
         res.json(updatedUser);
     } catch (err) {
         res.status(404).json({ message: err.message });

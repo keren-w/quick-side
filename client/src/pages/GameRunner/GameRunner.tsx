@@ -2,7 +2,7 @@ import { useState, useContext, useCallback } from 'react';
 import { UserContext } from '../../context';
 import SideResponseGame from '../../components/SideResponseGame/SideResponseGame';
 import styles from './GameRunner.module.css';
-import {updateUserScore} from '../../api';
+import {updateUserScore, getLeaderboard} from '../../api';
 
 const GameRunner = () => {
     const [isGameOn, setIsGameOn] = useState(false);
@@ -20,6 +20,7 @@ const GameRunner = () => {
             setIsGameOn(false);
             const updatedUserData = await updateUserScore(userData.id, {rounds: round-1, hits});
             setUserData(updatedUserData);
+            getLeaderboard();
         } else {
             setIsGameOn(true);
         }

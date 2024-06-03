@@ -49,9 +49,7 @@ class User {
     };
 
     static updateScore(id, score) {
-        console.log('number of rounds', score.rounds, 'number of hits', score.hits);
         const user = this.findByid(id);
-        console.log('user:', user);
         if (!user) {
             throw new Error('User not found');
         };

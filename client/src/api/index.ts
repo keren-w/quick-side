@@ -1,5 +1,6 @@
 const urlWithProxy = '/api/v1';
 import axios from "axios";
+import { IUser } from "../context";
 
 export const login = async (username: string) => {
     const response = await axios.post(`${urlWithProxy}/users/login`, { username });
@@ -12,6 +13,6 @@ export const updateUserScore = async (userId: string, score: {rounds: number, hi
 };
 
 export const getLeaderboard = async () => {
-    const response = await axios.get(`${urlWithProxy}/leaderboard`);
-    return response.data;
+    const response = await axios.get(`${urlWithProxy}/users/`);
+    console.log(response.data.map((user: IUser) => `Username: ${user.username}, Name: ${user.username} User Score: ${user.score.hits} hits / ${user.score.rounds} rounds`,));
 };
