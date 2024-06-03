@@ -4,7 +4,7 @@ const genderizeApi = 'https://api.genderize.io/';
 const randomuserApi = 'https://randomuser.me/api/';
 
 class User {
-    constructor(id, username, name, email,  picture, gender, score = 0) {
+    constructor(id, username, name, email,  picture, gender, score = {rounds: 0, hits: 0}) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -12,17 +12,21 @@ class User {
         this.picture = picture?.large;
         this.gender = gender;
         this.score = score;
-    }
+    };
 
     static users = [];
 
     static findAll() {
         return this.users;
-    }
+    };
 
-    static findByName(name) {
-        return this.users.find(user => user.name === name);
-    }
+    static findByid(id) {
+        return this.users.find(user => user.id === id);
+    };
+
+    static findByName(username) {
+        return this.users.find(user => user.username === username);
+    };
 
     static async create({ username }) {
         const id = uuidv4();
@@ -41,17 +45,19 @@ class User {
         return newUser;
         } catch (err) {
             console.error('Error enriching user data:', err);
-        }
-    }
+        };
+    };
 
-    static updateScore(name, score) {
-        const user = this.findByName(name);
+    static updateScore(id, score) {
+        console.log('number of rounds', score.rounds, 'number of hits', score.hits);
+        const user = this.findByid(id);
+        console.log('user:', user);
         if (!user) {
             throw new Error('User not found');
-        }
+        };
         user.score = score;
         return user;
-    }
-}
+    };
+};
 
 module.exports = User;

@@ -12,6 +12,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
         try {
             const newUser = await User.create({ username });
+            console.log('new user:', newUser);
             res.status(201).json(newUser);
         } catch (err) {
             res.status(400).json({ message: err.message });
@@ -21,10 +22,12 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.patch('/:id/score', (req, res) => {
+router.patch('/:id/score', async (req, res) => {
     const { score } = req.body;
+    // console.log('updateScore:', hits);
     try {
-        const updatedUser = User.updateScore(req.params.id, score);
+        const updatedUser = await User.updateScore(req.params.id, score);
+        console.log('updatedUser:', updatedUser);
         res.json(updatedUser);
     } catch (err) {
         res.status(404).json({ message: err.message });

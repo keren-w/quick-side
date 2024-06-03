@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 
-interface IUser {
+export interface IUser {
         id: string;
         username: string;
         name: {
@@ -11,7 +11,7 @@ interface IUser {
         email: string;
         picture: string;
         gender: string;
-        score: number;
+        score: {rounds: number, hits: number};
 
 };
 
@@ -31,7 +31,7 @@ const initialUserData: IUser = {
     email: '',
     picture: '',
     gender: '',
-    score: 0,
+    score: {rounds: 0, hits: 0},
 };
 
 export const UserContext = createContext<IUserContext>({
@@ -47,5 +47,4 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
             {children}
         </UserContext.Provider>
     );
-    
 }

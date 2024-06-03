@@ -4,17 +4,17 @@ import { useGameLogic } from "./hooks";
 
 interface ISideResponseGameProps {
   round: number;
-  onGameEnd: () => void;
+  onRoundEnd: (isHit: boolean) => void;
 }
 
-const SideResponseGame = ({ round, onGameEnd }: ISideResponseGameProps) => {
+const SideResponseGame = ({ round, onRoundEnd }: ISideResponseGameProps) => {
   const {
     showElement,
     position,
     feedback,
     gameWrapperRef,
     handleKeyDown,
-  } = useGameLogic(round, onGameEnd);
+  } = useGameLogic(round, onRoundEnd);
 
   return <div className={styles.gameWrapper}
     onKeyDown={handleKeyDown}

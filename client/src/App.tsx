@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useContext } from 'react';
 import { UserContext, UserContextProvider } from './context';
-import GamePlayer from './pages/GamePlayer';
+import GameRunner from './pages/GameRunner';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import NavBar from './components/NavBar';
@@ -24,7 +24,7 @@ const AppContent = () => {
       <div className="page-view">
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/game" element={<GamePlayer />} />
+          <Route path="/game" element={<GameRunner />} />
           <Route path="/404" element={<NotFound />} />
         </Routes>
       </div>

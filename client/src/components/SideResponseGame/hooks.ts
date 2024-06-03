@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { getRandomPosition, getRandomWaitTime, responseTime } from "./utils";
 
-export const useGameLogic = (round: number, onGameEnd: () => void) => {
+type TFeedbackType = 'success' | 'mistake';
+
+export const useGameLogic = (round: number, onRoundEnd: (isHit: boolean) => void) => {
   const [showElement, setShowElement] = useState<boolean>(false);
   const [position, setPosition] = useState<'right' | 'left'>(getRandomPosition());
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'mistake', message: string }>({ type: 'success', message: '' });
+  const [feedback, setFeedback] = useState<{ type: TFeedbackType, message: string }>({ type: 'success', message: '' });
   const gameWrapperRef = useRef<HTMLDivElement>(null);
   const timeoutIds = useRef<number[]>([]);
+
+  
 
   useEffect(() => {
     const divElement = gameWrapperRef.current;
@@ -28,7 +32,7 @@ export const useGameLogic = (round: number, onGameEnd: () => void) => {
     return () => {
       clearTimeouts();
     };
-  }, [round, onGameEnd]);
+  }, [round, onRoundEnd]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     resetGameCycle(e.key);
@@ -36,10 +40,11 @@ export const useGameLogic = (round: number, onGameEnd: () => void) => {
 
   const resetGameCycle = async (key: string) => {
     clearTimeouts();
-    setGameFeedback(key);
+    const newFeedback = getRoundFeedback(key);
+    setFeedback(newFeedback);
     setShowElement(false);
     await new Promise(resolve => setTimeout(resolve, 1000))
-    onGameEnd();
+    onRoundEnd(newFeedback.type === 'success');
     startGameCycle();
   };
 
@@ -65,20 +70,18 @@ export const useGameLogic = (round: number, onGameEnd: () => void) => {
     timeoutIds.current.push(waitTimeout);
   };
 
-  const setGameFeedback = (key: string) => {
+  const getRoundFeedback = (key: string) => {
     if (key === 'late') {
-      setFeedback({ type: 'mistake', message: 'Too Late' });
-      return;
+      return ({ type: 'mistake' as TFeedbackType, message: 'Too Late' });
     }
     if (!showElement) {
-      setFeedback({ type: 'mistake', message: 'Too Soon' });
-      return;
+      return ({ type: 'mistake' as TFeedbackType, message: 'Too Soon' });
+
     }
     if (key === 'a' && position === 'left' || key === 'l' && position === 'right') {
-      setFeedback({ type: 'success', message: 'Success' });
-      return;
+      return ({ type: 'success' as TFeedbackType, message: 'Success' });
     } 
-    setFeedback({ type: 'mistake', message: 'Wrong Key' });
+    return ({ type: 'mistake' as TFeedbackType, message: 'Wrong Key' });
   };
 
   const clearTimeouts = () => {

@@ -6,8 +6,8 @@ export const login = async (username: string) => {
     return response.data;
 };
 
-export const updateUserScore = async (username: string, score: number) => {
-    const response = await axios.post(`${urlWithProxy}/update-score`, { username, score });
+export const updateUserScore = async (userId: string, score: {rounds: number, hits: number}) => {
+    const response = await axios.patch(`${urlWithProxy}/users/${userId}/score`, {score});
     return response.data;
 };
 
