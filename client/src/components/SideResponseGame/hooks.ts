@@ -8,7 +8,7 @@ export const useGameLogic = (round: number, onRoundEnd: (isHit: boolean) => void
   const [position, setPosition] = useState<'right' | 'left'>(getRandomPosition());
   const [feedback, setFeedback] = useState<{ type: TFeedbackType, message: string }>({ type: 'success', message: '' });
   const gameWrapperRef = useRef<HTMLDivElement>(null);
-  const timeoutIds = useRef<number[]>([]);
+  const timeoutIds = useRef<NodeJS.Timeout[]>([]);
 
   
 

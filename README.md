@@ -35,6 +35,7 @@ Server: expressJS, In-memory storage (chosen for simplicity - in production I wo
 /users/score: Updates a user score after every game stop. This is a decision I made so that the entire session round scores are being updated instead of each round - more calls.
 
 ### More possible additions:
+- Add tests, especially for useGameLogic hook (I tried and left it for the time being)
 - Change user: local state (context) can support more then one user at a time.
 - Persistancy with auth and cookies/jwt.
 - Showing the elements on various point on the screen computer later by right/left.
