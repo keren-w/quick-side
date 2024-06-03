@@ -14,5 +14,5 @@ export const updateUserScore = async (userId: string, score: {rounds: number, hi
 
 export const getLeaderboard = async () => {
     const response = await axios.get(`${urlWithProxy}/users/`);
-    console.log(response.data.map((user: IUser) => `Username: ${user.username}, Name: ${user.username} User Score: ${user.score.hits} hits / ${user.score.rounds} rounds`,));
+    console.log(response.data.map((user: IUser) => `Username: ${user.username}, Name: ${user.name?.first}, User Score: ${user.score.hits} hits / ${user.score.rounds} rounds`,));
 };
